@@ -20,7 +20,7 @@ module.exports = class Platform extends Command{
 	async execute(msg, args){	// eslint-disable-line no-unused-vars
 		let guild = msg.guild;
 		let toSend = [
-			", hello! I'm the CATHARTES Clan BOT! It's my job to automate a couple things to make getting started easy.",
+			"hello! I'm the CATHARTES Clan BOT! It's my job to automate a couple things to make getting started easy.",
 			"How will you be playing Destiny 2?",
 			"[To pick, select as many reactions as apply]",
 			"",
@@ -95,7 +95,7 @@ module.exports = class Platform extends Command{
 			rolesToAdd.forEach((role) => {
 				rolesToAssign.set(role.id, role);
 			});
-			
+
 			await msg.member.setRoles(rolesToAssign);
 			menu.edit("Roles assigned!");
 		});
