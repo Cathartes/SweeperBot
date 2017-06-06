@@ -30,13 +30,9 @@ module.exports = class Platform extends Command{
 			":white_check_mark: when you are done."
 		];
 
-		// Prepare the menu
 		let menu = await msg.reply(toSend);
-		await menu.react("1⃣");
-		await menu.react("2⃣");
-		await menu.react("3⃣");
-		await menu.react("✅");
-
+		
+		// Start the reaction collector
 		let collector = new ReactionCollector(menu, reactionFilter, {time: TIMEOUT});
 		collector.on("collect", (reaction, collector) => {
 
@@ -46,43 +42,67 @@ module.exports = class Platform extends Command{
 
 		});
 
-		collector.once("end", (reactions) => {
-			let rolesToAssign = [];
+		collector.once("end", async (reactions) => {
+			let rolesToAdd = [];
 			let rolesToRemove = [];
-
 			reactions.forEach((reaction) => {
-				if(reaction.users.find("id", msg.author.id)){
+				let roleName = null;
 
-					let roleName = null;
+				switch(reaction.emoji.name){
+					case "1⃣":
+						roleName = "PC";
+						break;
+					case "2⃣":
+						roleName = "PS4";
+						break;
+					case "3⃣":
+						roleName = "Xbox";
+						break;
+				}
 
-					switch(reaction.emoji.name){
-						case "1⃣":
-							roleName = "PC";
-							break;
-						case "2⃣":
-							roleName = "PS4";
-							break;
-						case "3⃣":
-							roleName = "Xbox";
-							break;
+				if(roleName){
+					let role = guild.roles.find("name", roleName);
+
+					if(reaction.users.find("id", msg.author.id)){
+						rolesToAdd.push(role);
 					}
-
-					if(roleName){
-						let role = guild.roles.find("name", roleName);
-
-						if(reaction.users.find("id", msg.author.id)){
-							rolesToAssign.push(role);
-						}
-						else{
-							rolesToRemove.push(role);
-						}
+					else{
+						rolesToRemove.push(role);
 					}
 				}
+				
 			});
 
-			msg.member.addRoles(rolesToAssign);
-			msg.member.removeRoles(rolesToRemove);
+			// Remove roles to assign that are duplicate
+			rolesToAdd = rolesToAdd.filter((role) => {
+				return !msg.member.roles.find("id", role.id);
+			});
+			
+			// Remove roles to remove that the invoker doesn't actually have
+			rolesToRemove = rolesToRemove.filter((role) => {
+				return msg.member.roles.find("id", role.id);
+			});
+
+			// Get the IDs of roles to remove
+			let removedIDs = rolesToRemove.map(r => r.id);
+
+			// Get existing roles, filter out the roles to remove
+			let rolesToAssign = msg.member.roles.filter((role) => {
+				return !removedIDs.includes(role.id);
+			});
+
+			// Add roles we want to add
+			rolesToAdd.forEach((role) => {
+				rolesToAssign.set(role.id, role);
+			});
+			
+			await msg.member.setRoles(rolesToAssign);
 			menu.edit("Roles assigned!");
 		});
+
+		await menu.react("1⃣");
+		await menu.react("2⃣");
+		await menu.react("3⃣");
+		await menu.react("✅");
 	}
 };
