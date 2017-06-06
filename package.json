@@ -2,7 +2,7 @@
   "name": "CATHBot",
   "author": "Marisa-chan",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Just a shitty greeting bot, written in Discord.js.",
   "main": "app.js",
   "scripts": {
