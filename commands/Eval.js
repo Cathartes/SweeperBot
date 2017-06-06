@@ -5,7 +5,7 @@ module.exports = class Eval extends Command{
 	constructor(client){
 		super(client, {
 			name: "eval",
-			help: "Evaluates an expression.",
+			help: "Evaluates arbitrary Javascript.",
 			category: "Really Admin",
 			helpArgs: "<expression>",
 			elevation: 3
