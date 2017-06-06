@@ -12,8 +12,7 @@ module.exports = class Platform extends Command{
 		super(client, {
 			name: "platform",
 			help: "DEBUG: Used for testing platform selection and role assignment menu.",
-			category: "Admin",
-			elevation: 1,
+			category: "Destiny",
 			guildChannelOnly: true
 		});
 	}
