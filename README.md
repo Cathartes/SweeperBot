@@ -2,7 +2,7 @@
 something something meme bot
 
 # Installation
-Requires Node.js >= 7.0.0 (makes use of async/await, so `--harmony` flag is required). 
+Requires Node.js >= 7.0.0 (makes use of async/await, so `--harmony` flag is required).   
 Requires MongoDB server
 
 Create a `config.json` file in `./` in the same fashion as the provided `config.json.example`.
