@@ -1,4 +1,4 @@
-# CATHbot
+# SweeperBot
 something something meme bot
 
 # Installation
