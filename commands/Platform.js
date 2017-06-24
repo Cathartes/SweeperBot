@@ -73,9 +73,9 @@ module.exports = class Platform extends Command{
 		];
 
 		let choices = new Map();
-		choices.put("1⃣", "PC");
-		choices.put("2⃣", "PS4");
-		choices.put("3⃣", "Xbox");
+		choices.set("1⃣", "PC");
+		choices.set("2⃣", "PS4");
+		choices.set("3⃣", "Xbox");
 
 		let isSingleChoiceMenu = false;
 
