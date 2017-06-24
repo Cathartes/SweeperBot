@@ -1,5 +1,5 @@
 const ReactionCollector = require("discord.js").ReactionCollector;
-const TIMEOUT = 60000;
+const TIMEOUT = 180000;
 
 function reactionFilter(reaction){
 	return reaction.me;

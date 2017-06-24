@@ -23,10 +23,19 @@ module.exports = class SurveyLauncher{
 
 		let memberPath = await this._getMemberPath(target);
 
-		if(memberPath){
-			await this._surveyPlatforms(target);
-			await this._surveyClasses(target);
+		try{
+			if(memberPath){
+				await this._surveyPlatforms(target);
+				await this._surveyClasses(target);
+			}
+
+			await this._confirmClanRules(target);
+			await this._cleanupSurveyFlow(target, memberPath);
 		}
+		catch(e){
+			target.send(e);
+		}
+		
 	}
 
 	async _getMemberPath(target){
@@ -102,7 +111,43 @@ module.exports = class SurveyLauncher{
 		catch(e){
 			target.send(e);
 		}
+	}
 
+	async _confirmClanRules(target){
+		let toSend = [
+			"By completing this survey you are agreeing to obey all clan rules and conduct yourself accordingly.",
+			"The full clan rules can be read here: #clan_rules"
+		];
+
+		let choices = new Map();
+		choices.set(":ghost~1:", "I agree to the clan rules");
+
+		let isSingleChoiceMenu = true;
+
+		let confirmRulesMenu = new Menu(toSend, choices, isSingleChoiceMenu);
+
+		// Don't actually need to check output here;
+		// A rejection is thrown if no valid outputs are provided.
+		await confirmRulesMenu.launch(target);		
+	}
+
+	async _cleanupSurveyFlow(target, memberPath){
+		await target.send("https://i.kinja-img.com/gawker-media/image/upload/s--E5wSIHy9--/c_scale,f_auto,fl_progressive,q_80,w_800/bwlfwugzned9rp41466p.gif");
+
+		let toSend = [
+			":fireworks: :fireworks: :fireworks: :fireworks: :fireworks: :fireworks:",
+			`Congratulations!  You’ve been added to the clan discord as ${memberPath ? "an Applicant" : "a Friend of the Clan"}. You can chat with our members in multiple channels, or message @Admin if you have any questions.`,
+			"",
+			"What’s an Applicant?",
+			"Well you haven’t earned the clan tags just yet.  You need to participate in a “Clan Rush Week” in order to earn that badge.  But you can hangout in discord, join our clan members in activities, and come to clan events.  More details on the upcoming Rush Week will be sent to you soon."
+		];
+		await target.send(toSend);
+
+		let guild = this.client.mainGuild;
+		let roleName = memberPath ? "Applicant" : "Friend of the Clan";
+		let roleToAdd = guild.roles.find("name", roleName);
+
+		await guild.members.get(target.id).addRole(roleToAdd);
 	}
 
 	async _onGuildRoleSurveyResult(selectedChoices, target, possibleValues){
