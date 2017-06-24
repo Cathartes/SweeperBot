@@ -53,7 +53,7 @@ module.exports = class Platform extends Command{
 			rolesToRemove.push("Xbox");
 		}
 
-		let guildMember = guild.members.get(target);
+		let guildMember = guild.members.get(target.id);
 		// Remove roles to assign that are duplicate
 		rolesToAdd = rolesToAdd.filter((role) => {
 			return !guildMember.roles.find("id", role.id);

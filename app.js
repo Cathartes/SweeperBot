@@ -48,8 +48,7 @@ client.once("ready", () => {
 
 	// Hardcoded target guild
 	client.mainGuild = client.guilds.get("319470417150738432");
-	console.log(client.mainGuild.name);
-
+	
 	console.log(`Ready to begin! Serving in ${client.guilds.size} servers.`);
 	client.user.setGame(`DM "help" for assistance! | Version ${client.package.version}`);
 });
