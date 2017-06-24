@@ -2,60 +2,7 @@ const Command = require("../types/Command");
 
 const Menu = require("../helpers/Menu");
 
-async function onMenuResult(selectedChoices, target){
-	let rolesToAdd = [];
-	let rolesToRemove = [];
-	let guild = this.client.mainGuild;
 
-	selectedChoices.forEach((value) => {
-		let role = guild.roles.find("name", value);
-		if(role){
-			rolesToAdd.push(value);
-		}
-	});
-
-	// Any roles not added should be deleted
-	if(!rolesToAdd.find(e => e == "PC")){
-		rolesToRemove.push("PC");
-	}
-	if(!rolesToAdd.find(e => e == "PS4")){
-		rolesToRemove.push("PS4");
-	}
-	if(!rolesToAdd.find(e => e == "Xbox")){
-		rolesToRemove.push("Xbox");
-	}
-
-	let guildMember = guild.members.get(target);
-	// Remove roles to assign that are duplicate
-	rolesToAdd = rolesToAdd.filter((role) => {
-		return !guildMember.roles.find("id", role.id);
-	});
-	
-	// Remove roles to remove that the invoker doesn't actually have
-	rolesToRemove = rolesToRemove.filter((role) => {
-		return guildMember.roles.find("id", role.id);
-	});
-
-	// Get the IDs of roles to remove
-	let removedIDs = rolesToRemove.map(r => r.id);
-
-	// Get existing roles, filter out the roles to remove
-	let rolesToAssign = guildMember.roles.filter((role) => {
-		return !removedIDs.includes(role.id);
-	});
-
-	// Add roles we want to add
-	rolesToAdd.forEach((role) => {
-		rolesToAssign.set(role.id, role);
-	});
-
-	await guildMember.setRoles(rolesToAssign);
-	target.send("Roles assigned!");
-}
-
-function onMenuCancelled(target){
-	target.send("Survey cancelled.");
-}
 module.exports = class Platform extends Command{
 	constructor(client){
 		super(client, {
@@ -80,6 +27,61 @@ module.exports = class Platform extends Command{
 		let isSingleChoiceMenu = false;
 
 		let platformMenu = new Menu(toSend, choices, isSingleChoiceMenu);
-		platformMenu.launch(msg.author, onMenuResult, onMenuCancelled);
+		platformMenu.launch(msg.author, this._onMenuResult, this._onMenuCancelled);
+	}
+
+	async _onMenuResult(selectedChoices, target){
+		let rolesToAdd = [];
+		let rolesToRemove = [];
+		let guild = this.client.mainGuild;
+
+		selectedChoices.forEach((value) => {
+			let role = guild.roles.find("name", value);
+			if(role){
+				rolesToAdd.push(value);
+			}
+		});
+
+		// Any roles not added should be deleted
+		if(!rolesToAdd.find(e => e == "PC")){
+			rolesToRemove.push("PC");
+		}
+		if(!rolesToAdd.find(e => e == "PS4")){
+			rolesToRemove.push("PS4");
+		}
+		if(!rolesToAdd.find(e => e == "Xbox")){
+			rolesToRemove.push("Xbox");
+		}
+
+		let guildMember = guild.members.get(target);
+		// Remove roles to assign that are duplicate
+		rolesToAdd = rolesToAdd.filter((role) => {
+			return !guildMember.roles.find("id", role.id);
+		});
+		
+		// Remove roles to remove that the invoker doesn't actually have
+		rolesToRemove = rolesToRemove.filter((role) => {
+			return guildMember.roles.find("id", role.id);
+		});
+
+		// Get the IDs of roles to remove
+		let removedIDs = rolesToRemove.map(r => r.id);
+
+		// Get existing roles, filter out the roles to remove
+		let rolesToAssign = guildMember.roles.filter((role) => {
+			return !removedIDs.includes(role.id);
+		});
+
+		// Add roles we want to add
+		rolesToAdd.forEach((role) => {
+			rolesToAssign.set(role.id, role);
+		});
+
+		await guildMember.setRoles(rolesToAssign);
+		target.send("Roles assigned!");
+	}
+
+	async _onMenuCancelled(target){
+		target.send("Survey cancelled.");
 	}
 };
