@@ -23,6 +23,7 @@ db.once("open", function() {
 });
 
 // Load commands.
+const surveyLauncher = require("./helpers/SurveyLauncher");
 // TODO: Recursively search commands directory
 client.commands = new Map();
 client.once("ready", () => {
@@ -97,7 +98,11 @@ client.on("guildMemberAdd", async (member) => {
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
 	let processingRole = oldMember.guild.roles.find("name", "Processing");
 
-	// TODO: If "Processing" is a NEW role, then initiate the survey sequence
+	// If "Processing" is a NEW role, then initiate the survey sequence
+	if(newMember.roles.get(processingRole.id) && !oldMember.roles.get(processingRole.id)){
+		surveyLauncher.launch(newMember);
+	}
+
 });
 
 client.on("message", async (msg) => {
