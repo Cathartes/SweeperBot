@@ -21,11 +21,11 @@ module.exports = class SurveyLauncher{
 
 		await target.send(introMessage);
 
-		let memberPath = await _getMemberPath(target);
+		let memberPath = await this._getMemberPath(target);
 
 		if(memberPath){
-			await _surveyPlatforms(target);
-			await _surveyClasses(target);
+			await this._surveyPlatforms(target);
+			await this._surveyClasses(target);
 		}
 	}
 
