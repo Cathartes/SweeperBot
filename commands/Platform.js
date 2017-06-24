@@ -56,12 +56,12 @@ module.exports = class Platform extends Command{
 		let guildMember = guild.members.get(target.id);
 		// Remove roles to assign that are duplicate
 		rolesToAdd = rolesToAdd.filter((role) => {
-			return !guildMember.roles.find("id", role.id);
+			return !guildMember.roles.get(role.id);
 		});
 		
 		// Remove roles to remove that the invoker doesn't actually have
 		rolesToRemove = rolesToRemove.filter((role) => {
-			return guildMember.roles.find("id", role.id);
+			return guildMember.roles.get(role.id);
 		});
 
 		// Get the IDs of roles to remove
