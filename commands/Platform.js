@@ -26,7 +26,7 @@ module.exports = class Platform extends Command{
 
 		let platformMenu = new Menu(toSend, choices, isSingleChoiceMenu);
 		try{
-			let selectedChoices = platformMenu.launch(msg.author);
+			let selectedChoices = await platformMenu.launch(msg.author);
 			this._onMenuResult(selectedChoices, msg.author);
 		}
 		catch(e){
