@@ -52,7 +52,7 @@ module.exports = class Menu{
 			reactions.forEach((reaction) => {
 				let key = reaction.emoji.name;
 				let value = this.choices.get(key);
-				
+
 				if(value && reaction.users.find("id", target.id)){
 					retVal.push(value);
 				}
@@ -67,9 +67,11 @@ module.exports = class Menu{
 			}
 		});
 
-		this.choices.forEach(async (value, key) => {
-			await menu.react(key);
-		});
+		let keys = this.choices.keys();
+
+		for(let i = 0; i < keys; i++){
+			await menu.react(keys[i]);
+		}
 
 		if(!this.isSingleChoiceMenu){
 			await menu.react("✅");
