@@ -38,18 +38,18 @@ module.exports = class Platform extends Command{
 		selectedChoices.forEach((value) => {
 			let role = guild.roles.find("name", value);
 			if(role){
-				rolesToAdd.push(value);
+				rolesToAdd.push(role);
 			}
 		});
 
 		// Any roles not added should be deleted
-		if(!rolesToAdd.find(e => e == "PC")){
+		if(!rolesToAdd.find(e => e.name == "PC")){
 			rolesToRemove.push("PC");
 		}
-		if(!rolesToAdd.find(e => e == "PS4")){
+		if(!rolesToAdd.find(e => e.name == "PS4")){
 			rolesToRemove.push("PS4");
 		}
-		if(!rolesToAdd.find(e => e == "Xbox")){
+		if(!rolesToAdd.find(e => e.name == "Xbox")){
 			rolesToRemove.push("Xbox");
 		}
 
