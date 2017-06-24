@@ -122,7 +122,7 @@ module.exports = class SurveyLauncher{
 			if(!rolesToAdd.find(e => e.name == roleName)){
 				rolesToRemove.push(guild.roles.find("name", roleName));
 			}
-		})
+		});
 
 		let guildMember = guild.members.get(target.id);
 		// Remove roles to assign that are duplicate
@@ -149,6 +149,5 @@ module.exports = class SurveyLauncher{
 		});
 
 		await guildMember.setRoles(rolesToAssign);
-		target.send("Roles assigned!");
 	}
 };
