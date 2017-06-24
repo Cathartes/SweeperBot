@@ -14,8 +14,7 @@ module.exports = class Platform extends Command{
 
 	async execute(msg, args){	// eslint-disable-line no-unused-vars
 		let toSend = [
-			"hello! I'm the CATHARTES Clan BOT! It's my job to automate a couple things to make getting started easy.",
-			"How will you be playing Destiny 2?",
+			"How will you be playing Destiny 2? (The Clan is mainly PC)"
 		];
 
 		let choices = new Map();
@@ -26,15 +25,20 @@ module.exports = class Platform extends Command{
 		let isSingleChoiceMenu = false;
 
 		let platformMenu = new Menu(toSend, choices, isSingleChoiceMenu);
-		platformMenu.launch(msg.author, this._onMenuResult.bind(this), this._onMenuCancelled.bind(this));
+		try{
+			let selectedChoices = platformMenu.launch(msg.author);
+			this._onMenuResult(selectedChoices, msg.author);
+		}
+		catch(e){
+			msg.author.send(e);
+		}
 	}
 
 	async _onMenuResult(selectedChoices, target){
 		let rolesToAdd = [];
 		let rolesToRemove = [];
-		console.log("??");
 		let guild = this.client.mainGuild;
-		console.log("???");
+
 		selectedChoices.forEach((value) => {
 			let role = guild.roles.find("name", value);
 			if(role){
@@ -79,9 +83,5 @@ module.exports = class Platform extends Command{
 
 		await guildMember.setRoles(rolesToAssign);
 		target.send("Roles assigned!");
-	}
-
-	async _onMenuCancelled(target){
-		target.send("Survey cancelled.");
 	}
 };

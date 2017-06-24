@@ -12,68 +12,70 @@ module.exports = class Menu{
 		this.isSingleChoiceMenu = isSingleChoiceMenu;
 	}
 
-	async launch(target, onMenuResult, onMenuCancelled){
-		let toSend = this.text;
+	async launch(target){
+		return new Promise(async (resolve, reject) => {
+			let toSend = this.text;
 
-		if(this.isSingleChoiceMenu){
-			toSend.push("Choose one:");
-		}
-		else{
-			toSend.push("Choose as many as apply:");
-		}
-
-		this.choices.forEach((value, key) => {
-			toSend.push(`${key} ${value}`);
-		});
-
-		if(!this.isSingleChoiceMenu){
-			toSend.push("✅ when you are done");
-		}
-
-		let menu = await target.send(toSend);
-		
-		// Start the reaction collector
-		let collector = new ReactionCollector(menu, reactionFilter, {time: TIMEOUT});
-		collector.on("collect", (reaction, collector) => {
-
-			// If we expect MULTIPLE answers (not a singleChoiceMenu), expect a checkmark to finish the survey
-			if(!this.isSingleChoiceMenu && reaction.emoji.name === "✅" && reaction.users.find("id", target.id)){
-				collector.stop();
+			if(this.isSingleChoiceMenu){
+				toSend.push("Choose one:");
 			}
-			// else, if it's a singleChoiceMenu, stop
-			else if(this.isSingleChoiceMenu && reaction.users.find("id", target.id)){
-				collector.stop();
+			else{
+				toSend.push("Choose as many as apply:");
 			}
 
-		});
+			this.choices.forEach((value, key) => {
+				toSend.push(`${key} ${value}`);
+			});
 
-		collector.once("end", async (reactions) => {
-			let retVal = [];
-			reactions.forEach((reaction) => {
-				let key = reaction.emoji.name;
-				let value = this.choices.get(key);
+			if(!this.isSingleChoiceMenu){
+				toSend.push("✅ when you are done");
+			}
 
-				if(value && reaction.users.find("id", target.id)){
-					retVal.push(value);
+			let menu = await target.send(toSend);
+			
+			// Start the reaction collector
+			let collector = new ReactionCollector(menu, reactionFilter, {time: TIMEOUT});
+			collector.on("collect", (reaction, collector) => {
+
+				// If we expect MULTIPLE answers (not a singleChoiceMenu), expect a checkmark to finish the survey
+				if(!this.isSingleChoiceMenu && reaction.emoji.name === "✅" && reaction.users.find("id", target.id)){
+					collector.stop();
+				}
+				// else, if it's a singleChoiceMenu, stop
+				else if(this.isSingleChoiceMenu && reaction.users.find("id", target.id)){
+					collector.stop();
+				}
+
+			});
+
+			collector.once("end", async (reactions) => {
+				let retVal = [];
+				reactions.forEach((reaction) => {
+					let key = reaction.emoji.name;
+					let value = this.choices.get(key);
+
+					if(value && reaction.users.find("id", target.id)){
+						retVal.push(value);
+					}
+				});
+
+				if(retVal.length == 0){
+					reject(target);
+				}
+				else{
+					await menu.delete();
+					resolve(retVal, target);
 				}
 			});
 
-			if(retVal.length == 0){
-				onMenuCancelled(target);
+
+			for(let key of this.choices.keys()){
+				await menu.react(key);
 			}
-			else{
-				await menu.delete();
-				onMenuResult(retVal, target);
+
+			if(!this.isSingleChoiceMenu){
+				await menu.react("✅");
 			}
 		});
-
-
-		for(let key of this.choices.keys()){
-			await menu.react(key);
-		}
-
-		if(!this.isSingleChoiceMenu){
-			await menu.react("✅");
-		}
 	}
 };
