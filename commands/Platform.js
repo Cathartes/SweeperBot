@@ -48,13 +48,13 @@ module.exports = class Platform extends Command{
 
 		// Any roles not added should be deleted
 		if(!rolesToAdd.find(e => e.name == "PC")){
-			rolesToRemove.push("PC");
+			rolesToRemove.push(guild.roles.find("name", "PC"));
 		}
 		if(!rolesToAdd.find(e => e.name == "PS4")){
-			rolesToRemove.push("PS4");
+			rolesToRemove.push(guild.roles.find("name", "PS4"));
 		}
 		if(!rolesToAdd.find(e => e.name == "Xbox")){
-			rolesToRemove.push("Xbox");
+			rolesToRemove.push(guild.roles.find("name", "Xbox"));
 		}
 
 		let guildMember = guild.members.get(target.id);
