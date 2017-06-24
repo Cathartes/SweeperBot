@@ -9,7 +9,6 @@ module.exports = class Platform extends Command{
 			name: "platform",
 			help: "DEBUG: Used for testing platform selection and role assignment menu.",
 			category: "Destiny",
-			guildChannelOnly: true
 		});
 	}
 
@@ -33,8 +32,9 @@ module.exports = class Platform extends Command{
 	async _onMenuResult(selectedChoices, target){
 		let rolesToAdd = [];
 		let rolesToRemove = [];
+		console.log("??");
 		let guild = this.client.mainGuild;
-
+		console.log("???");
 		selectedChoices.forEach((value) => {
 			let role = guild.roles.find("name", value);
 			if(role){
