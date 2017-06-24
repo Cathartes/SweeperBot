@@ -69,7 +69,7 @@ module.exports = class Menu{
 
 		let keys = this.choices.keys();
 
-		for(let i = 0; i < keys; i++){
+		for(let i = 0; i < keys.length; i++){
 			await menu.react(keys[i]);
 		}
 
