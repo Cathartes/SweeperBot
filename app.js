@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
+
 // Load configs
 var cr = require("./config.json");
 client.package = require("./package.json");
@@ -44,6 +45,10 @@ client.once("ready", () => {
 			}
 		}
 	});
+
+	// Hardcoded target guild
+	client.mainGuild = client.guilds.get("319470417150738432");
+
 	console.log(`Ready to begin! Serving in ${client.guilds.size} servers.`);
 	client.user.setGame(`DM "help" for assistance! | Version ${client.package.version}`);
 });
@@ -78,12 +83,22 @@ client.on("guildCreate", async (guild) =>{
 });
 
 client.on("guildMemberAdd", async (member) => {
+	// Fetch the guild's greeting
 	let guild = await Guild.findOne({id: member.guild.id});
 	if(guild.greeting.length > 0){
-		member.sendMessage(guild.greeting);
+		await member.sendMessage(guild.greeting);
 	}
+
+	// Assign the PROCESSING role
+	let processingRole = member.guild.roles.find("name", "Processing");
+	member.addRole(processingRole);
 });
 
+client.on("guildMemberUpdate", async (oldMember, newMember) => {
+	let processingRole = oldMember.guild.roles.find("name", "Processing");
+
+	// TODO: If "Processing" is a NEW role, then initiate the survey sequence
+});
 
 client.on("message", async (msg) => {
 	if(msg.author.bot){	// Don't respond to bots
@@ -111,9 +126,12 @@ client.on("message", async (msg) => {
 
 	let commandString = msg.content.substring(offset).split(" ")[0].toLowerCase();
 	let command = client.commands.get(commandString);
+
+	// TODO: In the absence of a command, execute any triggers if applicable.
 	if(!command){
 		return;
 	}
+
 	try{
 		let args = msg.content.substring(offset + commandString.length).trim();
 		if(args){
