@@ -23,7 +23,9 @@ db.once("open", function() {
 });
 
 // Load commands.
-const surveyLauncher = require("./helpers/SurveyLauncher");
+const SurveyLauncher = require("./helpers/SurveyLauncher");
+let surveyLauncher;
+
 // TODO: Recursively search commands directory
 client.commands = new Map();
 client.once("ready", () => {
@@ -49,6 +51,7 @@ client.once("ready", () => {
 
 	// Hardcoded target guild
 	client.mainGuild = client.guilds.get("319470417150738432");
+	surveyLauncher = new SurveyLauncher(client);
 	
 	console.log(`Ready to begin! Serving in ${client.guilds.size} servers.`);
 	client.user.setGame(`DM "help" for assistance! | Version ${client.package.version}`);
