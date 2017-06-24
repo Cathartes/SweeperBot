@@ -67,10 +67,9 @@ module.exports = class Menu{
 			}
 		});
 
-		let keys = this.choices.keys();
 
-		for(let i = 0; i < keys.length; i++){
-			await menu.react(keys[i]);
+		for(let key of this.choices.keys()){
+			await menu.react(key);
 		}
 
 		if(!this.isSingleChoiceMenu){
