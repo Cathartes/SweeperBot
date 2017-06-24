@@ -120,7 +120,7 @@ module.exports = class SurveyLauncher{
 		];
 
 		let choices = new Map();
-		choices.set(":ghost~1:", "I agree to the clan rules");
+		choices.set("👌", "I agree to the clan rules");
 
 		let isSingleChoiceMenu = true;
 
