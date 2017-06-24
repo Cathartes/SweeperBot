@@ -26,7 +26,7 @@ module.exports = class Platform extends Command{
 		let isSingleChoiceMenu = false;
 
 		let platformMenu = new Menu(toSend, choices, isSingleChoiceMenu);
-		platformMenu.launch(msg.author, this._onMenuResult, this._onMenuCancelled);
+		platformMenu.launch(msg.author, this._onMenuResult.bind(this), this._onMenuCancelled.bind(this));
 	}
 
 	async _onMenuResult(selectedChoices, target){
