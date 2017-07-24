@@ -136,11 +136,15 @@ module.exports = class SurveyLauncher{
 
 		let toSend = [
 			":fireworks: :fireworks: :fireworks: :fireworks: :fireworks: :fireworks:",
-			`Congratulations!  You’ve been added to the clan discord as ${memberPath ? "an Applicant" : "a Friend of the Clan"}. You can chat with our members in multiple channels, or message @Admin if you have any questions.`,
-			"",
-			"What’s an Applicant?",
-			"Well you haven’t earned the clan tags just yet.  You need to participate in a “Clan Rush Week” in order to earn that badge.  But you can hangout in discord, join our clan members in activities, and come to clan events.  More details on the upcoming Rush Week will be sent to you soon."
+			`Congratulations!  You’ve been added to the clan discord as ${memberPath ? "an Applicant" : "a Friend of the Clan"}. You can chat with our members in multiple channels, or message @Admin if you have any questions.`
 		];
+
+		if(memberPath){
+			toSend.push("");
+			toSend.push("What’s an Applicant?");
+			toSend.push("Well you haven’t earned the clan tags just yet.  You need to participate in a “Clan Rush Week” in order to earn that badge.  But you can hangout in discord, join our clan members in activities, and come to clan events.  More details on the upcoming Rush Week will be sent to you soon.");
+		}
+		
 		await target.send(toSend);
 
 		let guild = this.client.mainGuild;
