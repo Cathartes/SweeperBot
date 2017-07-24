@@ -147,11 +147,16 @@ module.exports = class SurveyLauncher{
 		
 		await target.send(toSend);
 
+		// Add applicable member role
 		let guild = this.client.mainGuild;
 		let roleName = memberPath ? "Applicant" : "Friend of the Clan";
 		let roleToAdd = guild.roles.find("name", roleName);
 
 		await guild.members.get(target.id).addRole(roleToAdd);
+
+		// Remove processing role
+		let processingRole = member.guild.roles.find("name", "Processing");
+		await member.removeRole(processingRole);
 	}
 
 	async _onGuildRoleSurveyResult(selectedChoices, target, possibleValues){
