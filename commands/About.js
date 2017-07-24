@@ -10,6 +10,6 @@ module.exports = class About extends Command{
 	}
 
 	async execute(msg, args){	// eslint-disable-line no-unused-vars
-		return msg.reply(`Hi! I'm CATHbot version ${this.client.package.version}.\n\nYou can follow my development here: https://github.com/Buluphont/CATHbot`);
+		return msg.reply(`Hi! I'm Sweeperbot version ${this.client.package.version}.\n\nYou can follow my development here: https://github.com/Cathartes/Sweeperbot`);
 	}
 };
