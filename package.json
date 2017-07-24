@@ -2,7 +2,7 @@
   "name": "SweeperBot",
   "author": "Marisa-chan",
   "license": "MIT",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Just a shitty greeting bot, written in Discord.js.",
   "main": "app.js",
   "scripts": {
