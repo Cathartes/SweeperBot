@@ -62,7 +62,7 @@ module.exports = class Platform extends Command{
 		rolesToAdd = rolesToAdd.filter((role) => {
 			return !guildMember.roles.get(role.id);
 		});
-		
+
 		// Remove roles to remove that the invoker doesn't actually have
 		rolesToRemove = rolesToRemove.filter((role) => {
 			return guildMember.roles.get(role.id);

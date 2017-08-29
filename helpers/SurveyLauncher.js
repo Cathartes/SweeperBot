@@ -7,14 +7,16 @@ module.exports = class SurveyLauncher{
 
 	async launch(target){
 		let introMessage = [
-			`:exclamation: Hello ${target} :exclamation: Welcome to Cathartes.  We are a Destiny 2 clan that wants to make playing the game more fun.  Here are some quick bullet points on what we are about:`,
+			`:exclamation: Hello ${target} :exclamation: Welcome to Cathartes. ` +
+			"We are a Destiny 2 clan that wants to make playing the game more fun. " +
+			"Here are some quick bullet points on what we are about:",
 			"",
 			":desktop: Mostly PC players (Some PS4, next to zero Xbox).",
 			":busts_in_silhouette: Great people to talk to and help you finish quests/pvp/raids etc.",
 			":calendar_spiral: Events and challenges to celebrate our members.",
-			":books: We sharing knowledge by posting secrets/lore/guides/theories/etc.",
+			":books: We love sharing knowledge by posting secrets/lore/guides/theories/etc.",
 			":do_not_litter: We are respectful and adhere to a strict set of rules of conduct.",
-			":globe_with_meridians: Visit our website to learn more: https://cathartes.blog/",
+			":globe_with_meridians: Visit our website to learn more: https://cathartes.blog",
 			"",
 			"In order to gain full access to the Clan Discord you need to complete the following quick survey:"
 		];
@@ -35,13 +37,12 @@ module.exports = class SurveyLauncher{
 		catch(e){
 			target.send(e);
 		}
-		
 	}
 
 	async _getMemberPath(target){
 		let toSend = [
 			"Are you applying to join CATHARTES as a full member?",
-			"Or if you already have a clan, or don’t play Destiny 2 would you like to be a (non-member) Friend of the Clan?"
+			"Or if you already have a clan or don’t play Destiny 2, would you like to be a (non-member) Friend of the Clan?"
 		];
 
 		let choices = new Map();
@@ -87,7 +88,8 @@ module.exports = class SurveyLauncher{
 
 	async _surveyClasses(target){
 		let toSend = [
-			"What classes will you be playing Destiny 2?"
+			`What classes will you be playing Destiny 2? (Select the check to skip)
+			You can answer again anytime with the command "!class".`
 		];
 
 		let choices = new Map();
@@ -128,7 +130,7 @@ module.exports = class SurveyLauncher{
 
 		// Don't actually need to check output here;
 		// A rejection is thrown if no valid outputs are provided.
-		await confirmRulesMenu.launch(target);		
+		await confirmRulesMenu.launch(target);
 	}
 
 	async _cleanupSurveyFlow(target, memberPath){
@@ -136,15 +138,21 @@ module.exports = class SurveyLauncher{
 
 		let toSend = [
 			":fireworks: :fireworks: :fireworks: :fireworks: :fireworks: :fireworks:",
-			`Congratulations!  You’ve been added to the clan discord as ${memberPath ? "an Applicant" : "a Friend of the Clan"}. You can chat with our members in multiple channels, or message @Admin if you have any questions.`
+			`Congratulations! You’ve been added to the clan discord as ${memberPath ? "an Applicant" : "a Friend of the Clan"}.
+			 You can chat with our members in multiple channels, or message @Admin if you have any questions.`
 		];
 
 		if(memberPath){
 			toSend.push("");
 			toSend.push("What’s an Applicant?");
-			toSend.push("Well you haven’t earned the clan tags just yet.  You need to participate in a “Clan Rush Week” in order to earn that badge.  But you can hangout in discord, join our clan members in activities, and come to clan events.  More details on the upcoming Rush Week will be sent to you soon.");
+			toSend.push(
+				"Well you haven’t earned the clan tags just yet. " +
+				"You need to participate in a “Clan Rush Week” in order to earn that badge. " +
+				"But you can hangout in discord, join our clan members in activities, and come to clan events. " +
+				"More details on the upcoming Rush Week will be sent to you soon."
+			);
 		}
-		
+
 		await target.send(toSend);
 
 		// Add applicable member role
@@ -155,8 +163,8 @@ module.exports = class SurveyLauncher{
 		await guild.members.get(target.id).addRole(roleToAdd);
 
 		// Remove processing role
-		let processingRole = member.guild.roles.find("name", "Processing");
-		await member.removeRole(processingRole);
+		let processingRole = guild.roles.find("name", "Processing");
+		await guild.members.get(target.id).removeRole(processingRole);
 	}
 
 	async _onGuildRoleSurveyResult(selectedChoices, target, possibleValues){
@@ -183,7 +191,7 @@ module.exports = class SurveyLauncher{
 		rolesToAdd = rolesToAdd.filter((role) => {
 			return !guildMember.roles.get(role.id);
 		});
-		
+
 		// Remove roles to remove that the invoker doesn't actually have
 		rolesToRemove = rolesToRemove.filter((role) => {
 			return guildMember.roles.get(role.id);
