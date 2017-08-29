@@ -10,6 +10,9 @@ module.exports = class About extends Command{
 	}
 
 	async execute(msg, args){	// eslint-disable-line no-unused-vars
-		return msg.reply(`Hi! I'm Sweeperbot version ${this.client.package.version}.\n\nYou can follow my development here: https://github.com/Cathartes/Sweeperbot`);
+		return msg.reply(
+			`Hi! I'm Sweeperbot version ${this.client.package.version}.\n
+			You can follow my development here: https://github.com/Cathartes/Sweeperbot`
+		);
 	}
 };

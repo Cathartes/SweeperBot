@@ -17,10 +17,10 @@ module.exports = class Menu{
 			let toSend = this.text;
 
 			if(this.isSingleChoiceMenu){
-				toSend.push("Choose one:");
+				toSend.push("Select one:");
 			}
 			else{
-				toSend.push("Choose as many as apply:");
+				toSend.push("Select as many as apply:");
 			}
 
 			this.choices.forEach((value, key) => {
@@ -28,11 +28,11 @@ module.exports = class Menu{
 			});
 
 			if(!this.isSingleChoiceMenu){
-				toSend.push("✅ when you are done");
+				toSend.push("✅ submit when you are done");
 			}
 
 			let menu = await target.send(toSend);
-			
+
 			// Start the reaction collector
 			let collector = new ReactionCollector(menu, reactionFilter, {time: TIMEOUT});
 			collector.on("collect", (reaction, collector) => {

@@ -12,7 +12,7 @@ module.exports = class Elevate extends Command{
 		});
 	}
 
-	async execute(msg, args){	// eslint-disable-line no-unused-vars
+	async execute(msg, args){
 		let prefix;
 		if(msg.guild){
 			prefix = await this.client.fetchPrefix(msg.guild.id);
